@@ -7,20 +7,20 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
+
 class Settings(BaseModel):
     authjwt_secret_key: str = "secret"
+
 
 @AuthJWT.load_config
 def get_config():
     return Settings()
 
+
 @app.exception_handler(AuthJWTException)
 def authjwt_exception_handler(request: Request, exc: AuthJWTException):
-    return JSONResponse(
-        status_code=exc.status_code,
-        content={"detail": exc.message}
-    )
+    return JSONResponse(status_code=exc.status_code, content={"detail": exc.message})
 
 
-app.include_router(users.router,tags=['users'])
-app.include_router(items.router,tags=['items'])
+app.include_router(users.router, tags=["users"])
+app.include_router(items.router, tags=["items"])
